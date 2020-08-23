@@ -16,6 +16,7 @@ set (ioapi_libsources
      include/ioapi/io.h
      src/ioapi/device.c
      include/ioapi/device.h
+     include/ioapi/impl/io_cfg.h
      )
 
 add_library ( ioapi
