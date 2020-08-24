@@ -3,4 +3,6 @@
 
 #define IOAPI_CHECKED_BUILD
 
+#define IOAPI_DEVICE_COUNT_MAX (127-1)
+
 #endif /* IOAPI_IMPL_IO_CFG_H_INCLUDED */

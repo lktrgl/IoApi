@@ -6,24 +6,28 @@
 
 /*---------------------------------------------------------------------------*/
 
-static device_id_t s_device_descriptor[IOAPI_DESCRIPTOR_MAX_COUNT] = {};
+#ifdef IOAPI_CHECKED_BUILD
+static uint8_t s_descriptor_opened[IOAPI_DEVICE_COUNT_MAX] = {};
+#endif /* IOAPI_CHECKED_BUILD */
 
 /*---------------------------------------------------------------------------*/
 
 int8_t open ( const uint8_t id )
 {
-  /* whether the device has been opened */
-  int8_t i;
+#ifdef IOAPI_CHECKED_BUILD
 
-  for ( i = 0; i < IOAPI_DESCRIPTOR_MAX_COUNT; ++i )
+  if ( id >= IOAPI_DEVICE_COUNT_MAX )
   {
-    if ( id == s_device_descriptor[i] )
-    {
-      return i;
-    }
+    return DEVICE_ERROR;
   }
 
-  /* it is not opened yet but whether the device has been registered */
+  if ( s_descriptor_opened[id] )
+  {
+    return DEVICE_ERROR;
+  }
+
+#endif /* IOAPI_CHECKED_BUILD */
+
   const device_descriptor_t* device = device_get_descriptor ( id );
 
 #ifdef IOAPI_CHECKED_BUILD
@@ -31,19 +35,14 @@ int8_t open ( const uint8_t id )
   if ( device )
 #endif /* IOAPI_CHECKED_BUILD */
   {
-    for ( i = 0; i < IOAPI_DESCRIPTOR_MAX_COUNT; ++i )
+    /* open the device */
+    if ( DEVICE_OK == device->open ( id ) )
     {
-      /* found a free cell */
-      if ( !s_device_descriptor[i] )
-      {
-        /* open the device */
-        if ( DEVICE_OK == device->open ( id ) )
-        {
-          /* store the device id */
-          s_device_descriptor[i] = id;
-          return i;
-        }
-      }
+#ifdef IOAPI_CHECKED_BUILD
+      s_descriptor_opened[id] = 0xFF;
+#endif /* IOAPI_CHECKED_BUILD */
+
+      return id;
     }
   }
 
@@ -56,14 +55,14 @@ int16_t read ( int8_t desc, void* dest, uint16_t len )
 {
 #ifdef IOAPI_CHECKED_BUILD
 
-  if ( desc >= IOAPI_DESCRIPTOR_MAX_COUNT )
+  if ( desc < 0 || desc >= IOAPI_DEVICE_COUNT_MAX )
   {
     return DEVICE_ERROR;
   }
 
 #endif /* IOAPI_CHECKED_BUILD */
 
-  const device_descriptor_t* device = device_get_descriptor ( s_device_descriptor[desc] );
+  const device_descriptor_t* device = device_get_descriptor ( desc );
 
 #ifdef IOAPI_CHECKED_BUILD
 
@@ -82,14 +81,14 @@ int16_t write ( int8_t desc, const void* src, uint16_t len )
 {
 #ifdef IOAPI_CHECKED_BUILD
 
-  if ( desc >= IOAPI_DESCRIPTOR_MAX_COUNT )
+  if ( desc < 0 || desc >= IOAPI_DEVICE_COUNT_MAX )
   {
     return DEVICE_ERROR;
   }
 
 #endif /* IOAPI_CHECKED_BUILD */
 
-  const device_descriptor_t* device = device_get_descriptor ( s_device_descriptor[desc] );
+  const device_descriptor_t* device = device_get_descriptor ( desc );
 
 #ifdef IOAPI_CHECKED_BUILD
 
@@ -108,14 +107,14 @@ int16_t ioctl ( int8_t desc, uint16_t operation, void* ptr )
 {
 #ifdef IOAPI_CHECKED_BUILD
 
-  if ( desc >= IOAPI_DESCRIPTOR_MAX_COUNT )
+  if ( desc < 0 || desc >= IOAPI_DEVICE_COUNT_MAX )
   {
     return DEVICE_ERROR;
   }
 
 #endif /* IOAPI_CHECKED_BUILD */
 
-  const device_descriptor_t* device = device_get_descriptor ( s_device_descriptor[desc] );
+  const device_descriptor_t* device = device_get_descriptor ( desc );
 
 #ifdef IOAPI_CHECKED_BUILD
 
@@ -132,23 +131,33 @@ int16_t ioctl ( int8_t desc, uint16_t operation, void* ptr )
 
 void close ( int8_t desc )
 {
-  /* whether the device has been opened */
-  if ( !s_device_descriptor[desc] )
+#ifdef IOAPI_CHECKED_BUILD
+
+  if ( desc >= IOAPI_DEVICE_COUNT_MAX )
   {
     return;
   }
 
-  /* it is not closed yet but whether the device has been registered */
-  const device_id_t id = s_device_descriptor[desc];
-  const device_descriptor_t* device = device_get_descriptor ( id );
+  if ( !s_descriptor_opened[desc] )
+  {
+    return;
+  }
+
+#endif /* IOAPI_CHECKED_BUILD */
+
+  const device_descriptor_t* device = device_get_descriptor ( desc );
 
 #ifdef IOAPI_CHECKED_BUILD
 
   if ( device )
 #endif /* IOAPI_CHECKED_BUILD */
   {
-    device->close ( id );
-    s_device_descriptor[desc] = 0;
+    /* close the device */
+    device->close ( desc );
+
+#ifdef IOAPI_CHECKED_BUILD
+    s_descriptor_opened[desc] = 0;
+#endif /* IOAPI_CHECKED_BUILD */
   }
 }
 

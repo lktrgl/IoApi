@@ -6,37 +6,45 @@
 
 /*---------------------------------------------------------------------------*/
 
-static const device_descriptor_t* s_device_registry[IOAPI_DEVICE_MAX_COUNT] = {};
-static uint8_t s_device_index[IOAPI_DEVICE_MAX_COUNT] = {};
+static const device_descriptor_t** s_device_registry = NULL;
 
 /*---------------------------------------------------------------------------*/
 
-int8_t device_register ( const device_descriptor_t* device )
+static uint8_t s_device_count = 0;
+
+/*---------------------------------------------------------------------------*/
+
+int8_t device_register ( const device_descriptor_t** device )
 {
-  uint8_t i;
+  uint16_t i;
 #ifdef IOAPI_CHECKED_BUILD
 
-  if ( !device || device->id > IOAPI_DEVICE_MAX_COUNT )
+  if ( !device )
   {
     return DEVICE_ERROR;
   }
 
 #endif /* IOAPI_CHECKED_BUILD */
+  s_device_registry = device;
 
-  for ( i = 0; i < IOAPI_DEVICE_MAX_COUNT; ++i )
+  for ( i = 0; *device; ++i, ++device )
   {
-    if ( s_device_registry[i] )
-    {
-      continue;
-    }
-
-    s_device_registry[i] = device;
-    s_device_index[device->id] = i;
-
-    return i;
+    ++s_device_count;
   }
 
-  return DEVICE_ERROR;
+#ifdef IOAPI_CHECKED_BUILD
+
+  if ( s_device_count > IOAPI_DEVICE_COUNT_MAX )
+  {
+    s_device_registry = NULL;
+    s_device_count = 0;
+
+    return DEVICE_ERROR;
+  }
+
+#endif /* IOAPI_CHECKED_BUILD */
+
+  return DEVICE_OK;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -46,7 +54,16 @@ int8_t device_init_all ()
   int8_t result = DEVICE_OK;
   uint8_t i;
 
-  for ( i = 0; i < IOAPI_DEVICE_MAX_COUNT; ++i )
+#ifdef IOAPI_CHECKED_BUILD
+
+  if ( !s_device_registry || !s_device_count )
+  {
+    return DEVICE_ERROR;
+  }
+
+#endif /* IOAPI_CHECKED_BUILD */
+
+  for ( i = 0; i < s_device_count; ++i )
   {
     const device_descriptor_t* device = s_device_registry[i];
 
@@ -77,14 +94,19 @@ const device_descriptor_t* device_get_descriptor ( const device_id_t id )
 {
 #ifdef IOAPI_CHECKED_BUILD
 
-  if ( id > IOAPI_DEVICE_MAX_COUNT )
+  if ( !s_device_registry || !s_device_count )
+  {
+    return NULL;
+  }
+
+  if ( id >= s_device_count )
   {
     return NULL;
   }
 
 #endif /* IOAPI_CHECKED_BUILD */
 
-  return s_device_registry[s_device_index[id]];
+  return s_device_registry[id];
 }
 
 /*---------------------------------------------------------------------------*/

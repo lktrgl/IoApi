@@ -8,9 +8,7 @@
 enum device_codes_enum
 {
   DEVICE_ERROR = -1,
-  DEVICE_OK = 1,
-  IOAPI_DESCRIPTOR_MAX_COUNT = 16U,
-  IOAPI_DEVICE_MAX_COUNT = 16U
+  DEVICE_OK = 1
 };
 
 /*---------------------------------------------------------------------------*/
@@ -30,7 +28,6 @@ typedef void ( *device_close_t ) ( device_id_t id );
 
 typedef struct device_descriptor_tag
 {
-  device_id_t id;
   device_init_t init;
   device_open_t open;
   device_read_t read;
@@ -41,7 +38,7 @@ typedef struct device_descriptor_tag
 
 /*---------------------------------------------------------------------------*/
 
-int8_t device_register ( const device_descriptor_t* device );
+int8_t device_register ( const device_descriptor_t** device );
 
 /*---------------------------------------------------------------------------*/
 
