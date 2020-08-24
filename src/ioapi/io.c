@@ -12,7 +12,7 @@ static uint8_t s_descriptor_opened[IOAPI_DEVICE_COUNT_MAX] = {};
 
 /*---------------------------------------------------------------------------*/
 
-int8_t open ( const uint8_t id )
+int8_t io_open ( const uint8_t id )
 {
 #ifdef IOAPI_CHECKED_BUILD
 
@@ -51,7 +51,7 @@ int8_t open ( const uint8_t id )
 
 /*---------------------------------------------------------------------------*/
 
-int16_t read ( int8_t desc, void* dest, uint16_t len )
+int16_t io_read ( int8_t desc, void* dest, uint16_t len )
 {
 #ifdef IOAPI_CHECKED_BUILD
 
@@ -77,7 +77,7 @@ int16_t read ( int8_t desc, void* dest, uint16_t len )
 
 /*---------------------------------------------------------------------------*/
 
-int16_t write ( int8_t desc, const void* src, uint16_t len )
+int16_t io_write ( int8_t desc, const void* src, uint16_t len )
 {
 #ifdef IOAPI_CHECKED_BUILD
 
@@ -103,7 +103,7 @@ int16_t write ( int8_t desc, const void* src, uint16_t len )
 
 /*---------------------------------------------------------------------------*/
 
-int16_t ioctl ( int8_t desc, uint16_t operation, void* ptr )
+int16_t io_ioctl ( int8_t desc, uint16_t operation, void* ptr )
 {
 #ifdef IOAPI_CHECKED_BUILD
 
@@ -129,7 +129,7 @@ int16_t ioctl ( int8_t desc, uint16_t operation, void* ptr )
 
 /*---------------------------------------------------------------------------*/
 
-void close ( int8_t desc )
+void io_close ( int8_t desc )
 {
 #ifdef IOAPI_CHECKED_BUILD
 

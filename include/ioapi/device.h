@@ -5,6 +5,13 @@
 
 /*---------------------------------------------------------------------------*/
 
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+
+/*---------------------------------------------------------------------------*/
+
 enum device_codes_enum
 {
   DEVICE_ERROR = -1,
@@ -49,5 +56,11 @@ int8_t device_init_all ();
 const device_descriptor_t* device_get_descriptor ( device_id_t id );
 
 /*---------------------------------------------------------------------------*/
+
+#ifdef __cplusplus
+} /* extern "C" */
+#endif
+
+/* ------------------------------------------------------------------------- */
 
 #endif /* IOAPI_DEVICE_H_INCLUDED */

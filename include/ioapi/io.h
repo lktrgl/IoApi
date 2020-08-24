@@ -5,12 +5,25 @@
 
 /*---------------------------------------------------------------------------*/
 
-int8_t open ( uint8_t id );
-int16_t read ( int8_t desc, void* dest, uint16_t len );
-int16_t write ( int8_t desc, const void* src, uint16_t len );
-int16_t ioctl ( int8_t desc, uint16_t operation, void* ptr );
-void close ( int8_t desc );
+#ifdef __cplusplus
+extern "C"
+{
+#endif
 
 /*---------------------------------------------------------------------------*/
+
+int8_t io_open ( uint8_t id );
+int16_t io_read ( int8_t desc, void* dest, uint16_t len );
+int16_t io_write ( int8_t desc, const void* src, uint16_t len );
+int16_t io_ioctl ( int8_t desc, uint16_t operation, void* ptr );
+void io_close ( int8_t desc );
+
+/*---------------------------------------------------------------------------*/
+
+#ifdef __cplusplus
+} /* extern "C" */
+#endif
+
+/* ------------------------------------------------------------------------- */
 
 #endif /* IOAPI_IO_H_INCLUDED */
