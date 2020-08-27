@@ -7,7 +7,7 @@
 /*---------------------------------------------------------------------------*/
 
 #ifdef IOAPI_CHECKED_BUILD
-static uint8_t s_descriptor_opened[IOAPI_DEVICE_COUNT_MAX] = {};
+static uint8_t s_descriptor_opened[IOAPI_DEVICE_COUNT_MAX] = {0};
 #endif /* IOAPI_CHECKED_BUILD */
 
 /*---------------------------------------------------------------------------*/
