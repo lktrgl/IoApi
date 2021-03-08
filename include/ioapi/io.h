@@ -12,7 +12,7 @@ extern "C"
 
 /*---------------------------------------------------------------------------*/
 
-int8_t io_open ( uint8_t id );
+int8_t io_open ( const char* device_name );
 int16_t io_read ( int8_t desc, void* dest, uint16_t len );
 int16_t io_write ( int8_t desc, const void* src, uint16_t len );
 int16_t io_ioctl ( int8_t desc, uint16_t operation, void* ptr );

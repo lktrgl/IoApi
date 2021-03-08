@@ -3,6 +3,7 @@
 #include <ioapi/impl/io_cfg.h>
 
 #include <stddef.h>
+#include <string.h>
 
 /*---------------------------------------------------------------------------*/
 
@@ -90,6 +91,30 @@ int8_t device_init_all ()
 
 /*---------------------------------------------------------------------------*/
 
+const device_id_t device_get_id ( const char* device_name )
+{
+#ifdef IOAPI_CHECKED_BUILD
+
+  if ( !s_device_count )
+  {
+    return DEVICE_ERROR;
+  }
+
+#endif /* IOAPI_CHECKED_BUILD */
+
+  for ( uint8_t id = 0; id < s_device_count; ++id )
+  {
+    if ( !strcmp ( s_device_registry[id]->device_name, device_name ) )
+    {
+      return ( device_id_t ) id;
+    }
+  }
+
+  return DEVICE_ERROR;
+}
+
+/*---------------------------------------------------------------------------*/
+
 const device_descriptor_t* device_get_descriptor ( const device_id_t id )
 {
 #ifdef IOAPI_CHECKED_BUILD
@@ -99,7 +124,12 @@ const device_descriptor_t* device_get_descriptor ( const device_id_t id )
     return NULL;
   }
 
-  if ( id >= s_device_count )
+  if ( id == DEVICE_ERROR )
+  {
+    return NULL;
+  }
+
+  if ( ( uint8_t ) id >= s_device_count )
   {
     return NULL;
   }

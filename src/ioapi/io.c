@@ -12,9 +12,16 @@ static uint8_t s_descriptor_opened[IOAPI_DEVICE_COUNT_MAX] = {0};
 
 /*---------------------------------------------------------------------------*/
 
-int8_t io_open ( const uint8_t id )
+int8_t io_open ( const char* device_name )
 {
+  const device_id_t id = device_get_id ( device_name );
+
 #ifdef IOAPI_CHECKED_BUILD
+
+  if ( id == DEVICE_ERROR )
+  {
+    return DEVICE_ERROR;
+  }
 
   if ( id >= IOAPI_DEVICE_COUNT_MAX )
   {
@@ -36,7 +43,7 @@ int8_t io_open ( const uint8_t id )
 #endif /* IOAPI_CHECKED_BUILD */
   {
     /* open the device */
-    if ( DEVICE_OK == device->open ( id ) )
+    if ( DEVICE_OK == device->open ( device_name ) )
     {
 #ifdef IOAPI_CHECKED_BUILD
       s_descriptor_opened[id] = 0xFF;

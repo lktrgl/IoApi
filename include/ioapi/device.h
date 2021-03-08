@@ -20,12 +20,12 @@ enum device_codes_enum
 
 /*---------------------------------------------------------------------------*/
 
-typedef uint8_t device_id_t;
+typedef int8_t device_id_t;
 
 /*---------------------------------------------------------------------------*/
 
 typedef int8_t ( *device_init_t ) ();
-typedef int8_t ( *device_open_t ) ( device_id_t id );
+typedef int8_t ( *device_open_t ) ( const char* device_name );
 typedef int16_t ( *device_read_t ) ( void* dest, uint16_t len );
 typedef int16_t ( *device_write_t ) ( const void* src, uint16_t len );
 typedef int16_t ( *device_ioctl_t ) ( uint16_t operation, void* ptr );
@@ -35,6 +35,7 @@ typedef void ( *device_close_t ) ( device_id_t id );
 
 typedef struct device_descriptor_tag
 {
+  const char* device_name;
   device_init_t init;
   device_open_t open;
   device_read_t read;
@@ -50,6 +51,10 @@ int8_t device_register ( const device_descriptor_t** device );
 /*---------------------------------------------------------------------------*/
 
 int8_t device_init_all ();
+
+/*---------------------------------------------------------------------------*/
+
+const device_id_t device_get_id ( const char* device_name );
 
 /*---------------------------------------------------------------------------*/
 
