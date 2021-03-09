@@ -54,7 +54,7 @@ int8_t device_init_all ();
 
 /*---------------------------------------------------------------------------*/
 
-const device_id_t device_get_id ( const char* device_name );
+device_id_t device_get_id ( const char* device_name );
 
 /*---------------------------------------------------------------------------*/
 
