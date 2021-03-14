@@ -37,7 +37,7 @@ int8_t io_open ( const char* device_name )
 
 #ifdef IOAPI_CHECKED_BUILD
 
-  if ( device )
+  if ( device && device->open )
 #endif /* IOAPI_CHECKED_BUILD */
   {
     /* open the device */
@@ -71,7 +71,7 @@ int16_t io_read ( int8_t desc, void* dest, uint16_t len )
 
 #ifdef IOAPI_CHECKED_BUILD
 
-  if ( device )
+  if ( device && device->read )
 #endif /* IOAPI_CHECKED_BUILD */
   {
     return device->read ( dest, len );
@@ -97,7 +97,7 @@ int16_t io_write ( int8_t desc, const void* src, uint16_t len )
 
 #ifdef IOAPI_CHECKED_BUILD
 
-  if ( device )
+  if ( device && device->write )
 #endif /* IOAPI_CHECKED_BUILD */
   {
     return device->write ( src, len );
@@ -123,7 +123,7 @@ int16_t io_ioctl ( int8_t desc, uint16_t operation, void* ptr )
 
 #ifdef IOAPI_CHECKED_BUILD
 
-  if ( device )
+  if ( device && device->ioctl )
 #endif /* IOAPI_CHECKED_BUILD */
   {
     return device->ioctl ( operation, ptr );
@@ -154,7 +154,7 @@ void io_close ( int8_t desc )
 
 #ifdef IOAPI_CHECKED_BUILD
 
-  if ( device )
+  if ( device && device->close )
 #endif /* IOAPI_CHECKED_BUILD */
   {
     /* close the device */
