@@ -3,6 +3,8 @@
 
 #include <stdint.h>
 
+#include <ioapi/impl/io_cfg.h>
+
 /*---------------------------------------------------------------------------*/
 
 #ifdef __cplusplus

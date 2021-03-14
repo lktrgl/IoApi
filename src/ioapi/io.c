@@ -1,7 +1,5 @@
 #include <ioapi/io.h>
 
-#include <ioapi/impl/io_cfg.h>
-
 #include <ioapi/device.h>
 
 /*---------------------------------------------------------------------------*/
