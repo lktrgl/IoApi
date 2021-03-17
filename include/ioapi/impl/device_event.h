@@ -1,5 +1,5 @@
-#ifndef IOAPI_IO_H_INCLUDED
-#define IOAPI_IO_H_INCLUDED
+#ifndef IOAPI_DEVICE_EVENT_H_INCLUDED
+#define IOAPI_DEVICE_EVENT_H_INCLUDED
 
 #include <stdint.h>
 
@@ -7,26 +7,21 @@
 
 /*---------------------------------------------------------------------------*/
 
-#include <ioapi/impl/io_generic.h>
-
-/*---------------------------------------------------------------------------*/
-
-#ifdef IOAPI_SYNC
-  #include <ioapi/impl/io_sync.h>
+#ifdef __cplusplus
+extern "C"
+{
 #endif
 
 /*---------------------------------------------------------------------------*/
 
-#ifdef IOAPI_ASYNC
-  #include <ioapi/impl/io_async.h>
-#endif
+typedef void ( *device_callback_event_t ) ( uint8_t io_event );
 
 /*---------------------------------------------------------------------------*/
 
-#ifdef IOAPI_CTL
-  #include <ioapi/impl/io_ctl.h>
+#ifdef __cplusplus
+} /* extern "C" */
 #endif
 
 /* ------------------------------------------------------------------------- */
 
-#endif /* IOAPI_IO_H_INCLUDED */
+#endif /* IOAPI_DEVICE_EVENT_H_INCLUDED */

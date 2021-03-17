@@ -1,5 +1,5 @@
-#ifndef IOAPI_IO_H_INCLUDED
-#define IOAPI_IO_H_INCLUDED
+#ifndef IOAPI_IO_ASYNC_H_INCLUDED
+#define IOAPI_IO_ASYNC_H_INCLUDED
 
 #include <stdint.h>
 
@@ -7,26 +7,28 @@
 
 /*---------------------------------------------------------------------------*/
 
-#include <ioapi/impl/io_generic.h>
-
-/*---------------------------------------------------------------------------*/
-
-#ifdef IOAPI_SYNC
-  #include <ioapi/impl/io_sync.h>
-#endif
-
-/*---------------------------------------------------------------------------*/
-
 #ifdef IOAPI_ASYNC
-  #include <ioapi/impl/io_async.h>
+  #include <ioapi/impl/device_async.h>
 #endif
 
 /*---------------------------------------------------------------------------*/
 
-#ifdef IOAPI_CTL
-  #include <ioapi/impl/io_ctl.h>
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+
+/*---------------------------------------------------------------------------*/
+
+int16_t io_read_async ( int8_t desc, device_io_result_t* result );
+int16_t io_write_async ( int8_t desc, device_io_result_t* result );
+
+/*---------------------------------------------------------------------------*/
+
+#ifdef __cplusplus
+} /* extern "C" */
 #endif
 
 /* ------------------------------------------------------------------------- */
 
-#endif /* IOAPI_IO_H_INCLUDED */
+#endif /* IOAPI_IO_ASYNC_H_INCLUDED */
